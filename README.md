@@ -33,7 +33,10 @@ users, files, events
 
 ##### The application only works with the JSON format, which should look like this:
 { "id": 0, "username": "bonboo@test.com", "status": "ACTIVE" }
+
 { "id": 0, "path": "/users", "userId": 1 }
+
 { "id": 0, "uploadDate": "13/05/2021", "fileId": 1, "userId": 1 }
+
 ##### When adding a new entity, the ID field must be zero (any other values will be overwritten by the new ID);
 ##### POST/PUT methods are processed by URLs (/user /file /event), DELETE (/user/{id} /file/{id} /event{id}), GET (/users)
