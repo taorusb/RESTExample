@@ -21,7 +21,7 @@ https://rest-example888.herokuapp.com/
 
 mvn flyway:migrate
 
-mvn tomcat7:run
+mvn package
 
 ##### Used design patterns:
 
