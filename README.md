@@ -1,4 +1,4 @@
-### REST Example v1.0 https://travis-ci.com/taorusb/RESTExample.svg?branch=main
+### REST Example v1.0 [![](https://travis-ci.com/taorusb/RESTExample.svg?branch=main)](https://travis-ci.com/taorusb/RESTExample.svg?branch=main)
 
 The application implements the REST architecture and applies the basic HTTP methods to it.
 
