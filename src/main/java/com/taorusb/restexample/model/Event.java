@@ -1,6 +1,5 @@
 package com.taorusb.restexample.model;
 
-import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
