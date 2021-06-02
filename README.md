@@ -39,4 +39,4 @@ users, files, events
 { "id": 0, "uploadDate": "13/05/2021", "fileId": 1, "userId": 1 }
 
 ##### When adding a new entity, the ID field must be zero (any other values will be overwritten by the new ID);
-##### POST/PUT methods are processed by URLs (/user /file /event), DELETE (/user/{id} /file/{id} /event{id}), GET (/users)
+##### POST/PUT methods are processed by URLs (/user /file /event), DELETE (/user/{id} /file/{id} /event/{id}), GET (/users)
