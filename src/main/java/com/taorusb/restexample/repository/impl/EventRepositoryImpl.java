@@ -1,23 +1,20 @@
 package com.taorusb.restexample.repository.impl;
 
-import com.taorusb.restexample.config.SessionFactorySupplier;
+import com.taorusb.restexample.supplier.SessionFactorySupplier;
 import com.taorusb.restexample.model.Event;
 import com.taorusb.restexample.model.File;
 import com.taorusb.restexample.model.User;
 import com.taorusb.restexample.repository.EventRepository;
 import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import java.util.List;
+import java.util.Objects;
 
 public class EventRepositoryImpl implements EventRepository {
 
-    private SessionFactory sessionFactory;
-    private Session session;
-    private Transaction transaction;
     private static EventRepositoryImpl instance;
 
     private EventRepositoryImpl() {
@@ -33,15 +30,11 @@ public class EventRepositoryImpl implements EventRepository {
     @Override
     public Event getById(Long id) {
         Event event;
-        sessionFactory = SessionFactorySupplier.getSessionFactory();
-        try {
-            session = sessionFactory.openSession();
+        try (Session session = SessionFactorySupplier.getSession()) {
             event = session.get(Event.class, id);
-            if (event == null) {
+            if (Objects.isNull(event)) {
                 throw new ObjectNotFoundException(id, "Entity not found.");
             }
-        } finally {
-            session.close();
         }
         return event;
     }
@@ -49,10 +42,8 @@ public class EventRepositoryImpl implements EventRepository {
     @Override
     public void deleteById(Long id) {
         int result;
-        sessionFactory = SessionFactorySupplier.getSessionFactory();
-        try {
-            session = sessionFactory.openSession();
-            transaction = session.beginTransaction();
+        try (Session session = SessionFactorySupplier.getSession()) {
+            Transaction transaction = session.beginTransaction();
             Query query = session.createQuery("delete from Event where id = :id");
             query.setParameter("id", id);
             result = query.executeUpdate();
@@ -60,20 +51,14 @@ public class EventRepositoryImpl implements EventRepository {
                 throw new ObjectNotFoundException(id, "Entity not found");
             }
             transaction.commit();
-        } finally {
-            session.close();
         }
     }
 
     @Override
     public List<Event> findAll() {
         List<Event> events;
-        sessionFactory = SessionFactorySupplier.getSessionFactory();
-        try {
-            session = sessionFactory.openSession();
+        try (Session session = SessionFactorySupplier.getSession()) {
             events = session.createQuery("from Event").list();
-        } finally {
-            session.close();
         }
         return events;
     }
@@ -82,19 +67,15 @@ public class EventRepositoryImpl implements EventRepository {
     public Event save(Event entity) {
         User user;
         File file;
-        sessionFactory = SessionFactorySupplier.getSessionFactory();
-        try {
-            session = sessionFactory.openSession();
-            transaction = session.beginTransaction();
+        try (Session session = SessionFactorySupplier.getSession()) {
+            Transaction transaction = session.beginTransaction();
             user = session.get(User.class, entity.getUser().getId());
             file = session.get(File.class, entity.getFile().getId());
-            if (user == null || file == null) {
+            if (Objects.isNull(user) || Objects.isNull(file)) {
                 throw new ObjectNotFoundException(entity.getUser().getId(), "Entity not found");
             }
             session.save(entity);
             transaction.commit();
-        } finally {
-            session.close();
         }
         return entity;
     }
@@ -104,22 +85,18 @@ public class EventRepositoryImpl implements EventRepository {
         Event event;
         User user;
         File file;
-        sessionFactory = SessionFactorySupplier.getSessionFactory();
-        try {
-            session = sessionFactory.openSession();
-            transaction = session.beginTransaction();
+        try (Session session = SessionFactorySupplier.getSession()) {
+            Transaction transaction = session.beginTransaction();
             event = session.load(Event.class, entity.getId());
             user = session.load(User.class, entity.getUser().getId());
             file = session.load(File.class, entity.getFile().getId());
-            if (event == null || user == null || file == null) {
+            if (Objects.isNull(event) || Objects.isNull(user) || Objects.isNull(file)) {
                 throw new ObjectNotFoundException(entity.getId(), "Entity not found.");
             }
             event.setUploadDate(entity.getUploadDate());
             event.setUser(user);
             event.setFile(file);
             transaction.commit();
-        } finally {
-            session.close();
         }
         return entity;
     }
@@ -127,17 +104,13 @@ public class EventRepositoryImpl implements EventRepository {
     @Override
     public List<Event> findByUserId(Long id) {
         List<Event> events;
-        sessionFactory = SessionFactorySupplier.getSessionFactory();
-        try {
-            session = sessionFactory.openSession();
+        try (Session session = SessionFactorySupplier.getSession()) {
             events = session.createQuery("from Event where user.id = :id")
                     .setParameter("id", id)
                     .list();
             if (events.size() == 0) {
                 throw new ObjectNotFoundException(id, "Entity not found.");
             }
-        } finally {
-            session.close();
         }
         return events;
     }
@@ -145,18 +118,14 @@ public class EventRepositoryImpl implements EventRepository {
     @Override
     public Event findByDoubleId(Long userId, Long id) {
         Event event;
-        sessionFactory = SessionFactorySupplier.getSessionFactory();
-        try {
-            session = sessionFactory.openSession();
+        try (Session session = SessionFactorySupplier.getSession()) {
             event = (Event) session.createQuery("from Event e where e.user.id = :userId and e.id = :id")
                     .setParameter("userId", userId)
                     .setParameter("id", id)
                     .uniqueResult();
-            if (event == null) {
+            if (Objects.isNull(event)) {
                 throw new ObjectNotFoundException(id, "Entity not found.");
             }
-        } finally {
-            session.close();
         }
         return event;
     }

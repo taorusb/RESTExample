@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface FileService extends GenericService<File, Long> {
     List<File> getByUserId(Long id);
-    File getByDoubleId(Long userId, Long id);
+    File getByUserId(Long userId, Long id);
 }

@@ -8,9 +8,9 @@ import java.util.List;
 
 public class EventServiceImpl implements EventService {
 
-    private EventRepository eventRepository;
+    private final EventRepository eventRepository;
 
-    public void setEventRepository(EventRepository eventRepository) {
+    public EventServiceImpl(EventRepository eventRepository) {
         this.eventRepository = eventRepository;
     }
 
@@ -45,7 +45,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Event getByDoubleId(Long userId, Long id) {
+    public Event getByUserId(Long userId, Long id) {
         return eventRepository.findByDoubleId(userId, id);
     }
 }

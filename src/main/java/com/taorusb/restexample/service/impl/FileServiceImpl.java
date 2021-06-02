@@ -8,9 +8,9 @@ import java.util.List;
 
 public class FileServiceImpl implements FileService {
 
-    private FileRepository fileRepository;
+    private final FileRepository fileRepository;
 
-    public void setFileRepository(FileRepository fileRepository) {
+    public FileServiceImpl(FileRepository fileRepository) {
         this.fileRepository = fileRepository;
     }
 
@@ -45,7 +45,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public File getByDoubleId(Long userId, Long id) {
+    public File getByUserId(Long userId, Long id) {
         return fileRepository.findByDoubleId(userId, id);
     }
 }

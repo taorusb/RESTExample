@@ -1,21 +1,18 @@
 package com.taorusb.restexample.repository.impl;
 
-import com.taorusb.restexample.config.SessionFactorySupplier;
+import com.taorusb.restexample.supplier.SessionFactorySupplier;
 import com.taorusb.restexample.model.User;
 import com.taorusb.restexample.repository.UserRepository;
 import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import java.util.List;
+import java.util.Objects;
 
 public class UserRepositoryImpl implements UserRepository {
 
-    private SessionFactory sessionFactory;
-    private Session session;
-    private Transaction transaction;
     private static UserRepositoryImpl instance;
 
     private UserRepositoryImpl() {
@@ -31,15 +28,11 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public User getById(Long id) {
         User user;
-        sessionFactory = SessionFactorySupplier.getSessionFactory();
-        try {
-            session = sessionFactory.openSession();
+        try (Session session = SessionFactorySupplier.getSession()) {
             user = session.get(User.class, id);
-            if (user == null) {
+            if (Objects.isNull(user)) {
                 throw new ObjectNotFoundException(id, "Entity not found.");
             }
-        } finally {
-            session.close();
         }
         return user;
     }
@@ -47,9 +40,8 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public void deleteById(Long id) {
         int result;
-        sessionFactory = SessionFactorySupplier.getSessionFactory();
-        try {
-            session = sessionFactory.openSession();
+        Transaction transaction;
+        try (Session session = SessionFactorySupplier.getSession()) {
             transaction = session.beginTransaction();
             Query query = session.createQuery("delete from User where id = :id");
             query.setParameter("id", id);
@@ -58,34 +50,25 @@ public class UserRepositoryImpl implements UserRepository {
                 throw new ObjectNotFoundException(id, "Entity not found");
             }
             transaction.commit();
-        } finally {
-            session.close();
         }
     }
 
     @Override
     public List<User> findAll() {
         List<User> users;
-        sessionFactory = SessionFactorySupplier.getSessionFactory();
-        try {
-            session = sessionFactory.openSession();
+        try (Session session = SessionFactorySupplier.getSession()) {
             users = session.createQuery("from User").list();
-        } finally {
-            session.close();
         }
         return users;
     }
 
     @Override
     public User save(User entity) {
-        sessionFactory = SessionFactorySupplier.getSessionFactory();
-        try {
-            session = sessionFactory.openSession();
+        Transaction transaction;
+        try (Session session = SessionFactorySupplier.getSession()) {
             transaction = session.beginTransaction();
             session.save(entity);
             transaction.commit();
-        } finally {
-            session.close();
         }
         return entity;
     }
@@ -93,19 +76,16 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public User update(User entity) {
         User user;
-        sessionFactory = SessionFactorySupplier.getSessionFactory();
-        try {
-            session = sessionFactory.openSession();
+        Transaction transaction;
+        try (Session session = SessionFactorySupplier.getSession()) {
             transaction = session.beginTransaction();
             user = session.get(User.class, entity.getId());
-            if (user == null) {
+            if (Objects.isNull(user)) {
                 throw new ObjectNotFoundException(entity.getId(), "Entity not found.");
             }
             user.setUsername(entity.getUsername());
             user.setStatus(entity.getStatus());
             transaction.commit();
-        } finally {
-            session.close();
         }
         return entity;
     }

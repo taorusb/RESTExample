@@ -1,8 +1,9 @@
-package com.taorusb.restexample.config;
+package com.taorusb.restexample.supplier;
 
 import com.taorusb.restexample.model.Event;
 import com.taorusb.restexample.model.File;
 import com.taorusb.restexample.model.User;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
@@ -22,5 +23,9 @@ public class SessionFactorySupplier {
                     .buildSessionFactory();
         }
         return sessionFactory;
+    }
+
+    public static Session getSession() {
+        return getSessionFactory().openSession();
     }
 }

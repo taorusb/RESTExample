@@ -15,7 +15,7 @@ MySQL
 
 ##### You can try the app on:
 
-https://rest-example888.herokuapp.com/
+https://rest-example888.herokuapp.com/api/v1/users
 
 ##### To launch the application on local machine, type in the command prompt:
 

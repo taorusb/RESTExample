@@ -1,4 +1,4 @@
-package com.taorusb.restexample.config;
+package com.taorusb.restexample.supplier;
 
 import com.google.gson.*;
 import com.taorusb.restexample.model.Event;
@@ -73,10 +73,10 @@ public class GsonSupplier {
         @Override
         public User deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jsonObject = json.getAsJsonObject();
-            jsonCheckerForUser(jsonObject);
-            idChecker(jsonObject.get("id").getAsString());
-            emailChecker(jsonObject.get("username").getAsString());
-            statusChecker(jsonObject.get("status").getAsString());
+            jsonCheckForUser(jsonObject);
+            idCheck(jsonObject.get("id").getAsString());
+            emailCheck(jsonObject.get("username").getAsString());
+            statusCheck(jsonObject.get("status").getAsString());
             User user = new User();
             user.setId(jsonObject.get("id").getAsLong());
             user.setUsername(jsonObject.get("username").getAsString());
@@ -90,10 +90,10 @@ public class GsonSupplier {
         @Override
         public File deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jsonObject = json.getAsJsonObject();
-            jsonCheckerForFile(jsonObject);
-            idChecker(jsonObject.get("id").getAsString());
-            pathChecker(jsonObject.get("path").getAsString());
-            idChecker(jsonObject.get("userId").getAsString());
+            jsonCheckForFile(jsonObject);
+            idCheck(jsonObject.get("id").getAsString());
+            pathCheck(jsonObject.get("path").getAsString());
+            idCheck(jsonObject.get("userId").getAsString());
             File file = new File();
             User user = new User();
             file.setId(jsonObject.get("id").getAsLong());
@@ -109,11 +109,11 @@ public class GsonSupplier {
         @Override
         public Event deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jsonObject = json.getAsJsonObject();
-            jsonCheckerForEvent(jsonObject);
-            idChecker(jsonObject.get("id").getAsString());
-            dateChecker(jsonObject.get("uploadDate").getAsString());
-            idChecker(jsonObject.get("userId").getAsString());
-            idChecker(jsonObject.get("fileId").getAsString());
+            jsonCheckForEvent(jsonObject);
+            idCheck(jsonObject.get("id").getAsString());
+            dateCheck(jsonObject.get("uploadDate").getAsString());
+            idCheck(jsonObject.get("userId").getAsString());
+            idCheck(jsonObject.get("fileId").getAsString());
             Event event = new Event();
             File file = new File();
             User user = new User();
@@ -127,7 +127,7 @@ public class GsonSupplier {
         }
     }
 
-    private static void jsonCheckerForUser(JsonObject jsonObject) {
+    private static void jsonCheckForUser(JsonObject jsonObject) {
         if (!jsonObject.has("id")
                 || !jsonObject.has("username")
                 || !jsonObject.has("status")) {
@@ -138,7 +138,7 @@ public class GsonSupplier {
         }
     }
 
-    private static void jsonCheckerForFile(JsonObject jsonObject) {
+    private static void jsonCheckForFile(JsonObject jsonObject) {
         if (!jsonObject.has("id")
                 || !jsonObject.has("path")
                 || !jsonObject.has("userId")) {
@@ -149,7 +149,7 @@ public class GsonSupplier {
         }
     }
 
-    private static void jsonCheckerForEvent(JsonObject jsonObject) {
+    private static void jsonCheckForEvent(JsonObject jsonObject) {
         if (!jsonObject.has("id")
                 || !jsonObject.has("uploadDate")
                 || !jsonObject.has("userId")
@@ -161,13 +161,13 @@ public class GsonSupplier {
         }
     }
 
-    private static void emailChecker(String s) {
+    private static void emailCheck(String s) {
         if (!s.matches("^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$")) {
             throw new IllegalArgumentException("Not valid email");
         }
     }
 
-    private static void statusChecker(String s) {
+    private static void statusCheck(String s) {
         try {
             UserStatus.valueOf(s);
         } catch (IllegalArgumentException e) {
@@ -175,19 +175,19 @@ public class GsonSupplier {
         }
     }
 
-    private static void pathChecker(String s) {
+    private static void pathCheck(String s) {
         if (!s.matches("^/|(/[\\w-]+)+$")) {
             throw new IllegalArgumentException("Not valid path");
         }
     }
 
-    private static void idChecker(String s) {
+    private static void idCheck(String s) {
         if (!s.matches("\\d+")) {
             throw new IllegalArgumentException("Not valid id");
         }
     }
 
-    private static void dateChecker(String s) {
+    private static void dateCheck(String s) {
         if (!s.matches("^(?:(?:31(\\/|-|\\.)(?:0?[13578]|1[02]))" +
                 "\\1|(?:(?:29|30)(\\/|-|\\.)(?:0?[13-9]|1[0-2])\\2))(?" +
                 ":(?:1[6-9]|[2-9]\\d)?\\d{2})$|^(?:29(\\/|-|\\.)0?2\\" +
